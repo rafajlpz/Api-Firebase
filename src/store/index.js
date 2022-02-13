@@ -74,8 +74,19 @@ export default createStore({
       }
       commit("set", tarea);
     },
-    deleteTareas({ commit }, id) {
-      commit("eliminar", id);
+    async deleteTareas({ commit }, id) {
+      try {
+        await fetch(
+          `https://udemy-api-8ec44-default-rtdb.europe-west1.firebasedatabase.app/tareas/
+          ${id}.json`,
+          {
+            method: "DELETE",
+          }
+        )
+        commit("eliminar", id)
+      } catch (error) {
+        console.log(error)
+      }
     },
     setTarea({ commit }, id) {
       commit("tarea", id);
@@ -87,15 +98,15 @@ export default createStore({
           ${tarea.id}.json`,
           {
             method: "PATCH",
-            body: JSON.stringify(tarea)
+            body: JSON.stringify(tarea),
           }
-        )
-        const dataDB = await res.json()
+        );
+        const dataDB = await res.json();
         commit("update", dataDB);
       } catch (error) {
         console.log(error);
       }
-    }
+    },
   },
   modules: {},
 });
