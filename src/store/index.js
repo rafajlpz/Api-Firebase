@@ -37,7 +37,23 @@ export default createStore({
     },
   },
   actions: {
-    cargarLocalStorage({ commit }) {},
+    async cargarLocalStorage({ commit }) {
+      try {
+        const res = await fetch(
+          "https://udemy-api-8ec44-default-rtdb.europe-west1.firebasedatabase.app/tareas.json"
+        );
+        const dataDB = await res.json();
+
+        const arrayTareas = [];
+
+        for (let id in dataDB) {
+          arrayTareas.push(dataDB[id]);
+        }
+        commit("cargar", arrayTareas);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async setTareas({ commit }, tarea) {
       try {
         const res = await fetch(
